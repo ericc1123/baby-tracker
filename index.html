@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Easton's Daily Rhythm</title>
+  <style>
+    :root {
+      --bg-light: #fefdfb;
+      --text-light: #222;
+      --card-light: #ffffff;
+      --bg-dark: #0f1116;
+      --text-dark: #f1f1f1;
+      --card-dark: #1a1d24;
+      /* lighter, friendly green */
+      --accent: #40c38c;
+      --accent-soft: #c6eedb;
+      font-size: 16px;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-light);
+      color: var(--text-light);
+      display: flex;
+      flex-direction: column;
+      min-height: 100dvh;
+      transition: background 0.3s, color 0.3s;
+    }
+    body.dark {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    header {
+      padding: 1rem;
+      text-align: center;
+      background: var(--accent);
+      color: #fff;
+      font-size: 1.25rem;
+      letter-spacing: 0.5px;
+    }
+
+    #status {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 28rem;
+      padding: 1rem 1.25rem;
+      border-radius: 0.75rem;
+      background: var(--card-light);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: background 0.3s;
+      cursor: pointer;
+    }
+    body.dark .card {
+      background: var(--card-dark);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+    .time {
+      font-size: 2rem;
+      font-weight: 600;
+      cursor: default;
+    }
+    .label {
+      font-size: 1.1rem;
+      margin-top: 0.25rem;
+      font-weight: 600;
+    }
+
+    .extra {
+      display: none;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      line-height: 1.35;
+    }
+
+    #toggleMode {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 3.25rem;
+      height: 3.25rem;
+      font-size: 1.35rem;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+    }
+
+    /* simple inline buttons */
+    .inline-btn {
+      background: transparent;
+      border: none;
+      color: var(--accent);
+      font-size: 1rem;
+      margin: 0.5rem 0.25rem 1rem;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    #fullDay, #tipsSection {
+      display: none;
+      padding: 0 1rem 2.5rem;
+    }
+
+    #fullDay .day-card {
+      margin: 0.5rem auto;
+    }
+
+    #tipsSection h3 {
+      margin-bottom: 0.25rem;
+      color: var(--accent);
+    }
+    #tipsSection ul {
+      padding-left: 1.25rem;
+      margin-top: 0.25rem;
+      line-height: 1.35;
+    }
+
+    /* Responsive tweaks */
+    @media (min-width: 480px) {
+      :root { font-size: 17px; }
+    }
+  </style>
+</head>
+<body class="light">
+  <header>Easton's Daily Rhythm</header>
+
+  <section id="status">
+    <div class="card time" id="currentTime">--:--</div>
+
+    <div class="card expandable" id="recent">
+      <span class="label">Most recent:</span><br>
+      <span id="recentText">—</span>
+      <div class="extra" id="recentExtra"></div>
+    </div>
+    <div class="card expandable" id="now">
+      <span class="label">Right now:</span><br>
+      <span id="nowText">—</span>
+      <div class="extra" id="nowExtra"></div>
+    </div>
+    <div class="card expandable" id="next">
+      <span class="label">Coming up:</span><br>
+      <span id="nextText">—</span>
+      <div class="extra" id="nextExtra"></div>
+    </div>
+  </section>
+
+  <div style="text-align:center;">
+    <button class="inline-btn" id="toggleFullDay">View Full Day ⤵︎</button>
+    <button class="inline-btn" id="toggleTips">Crazy Day Tips ⤵︎</button>
+  </div>
+
+  <section id="fullDay"></section>
+
+  <section id="tipsSection">
+    <h3>Crazy‑Day & Nap Tips</h3>
+    <ul>
+      <li>Feed by <strong>9 a.m.</strong> no matter what.</li>
+      <li>No naps longer than <strong>2 hours</strong>.</li>
+      <li>Supper feed at <strong>5:30 p.m.</strong> (scrunch feeds if needed).</li>
+      <li>If baby doesn’t eat well at 5:30 p.m., the 8:30 p.m. feed becomes key.</li>
+      <li>White noise + swaddle for naps; allow a little sunlight in daytime.</li>
+    </ul>
+
+    <h3>Night Feed Routine (2 – 3 a.m.)</h3>
+    <ul>
+      <li>Turn <strong>off</strong> white noise and un‑swaddle.</li>
+      <li>Feed well — aim for recommended ounces.</li>
+      <li>Change diaper, re‑swaddle using no‑fail technique.</li>
+      <li>Offer a few more sucks (max 3‑5 min), then back to crib.</li>
+      <li>White noise <strong>on</strong>, lights off. Strictly business! 😴</li>
+      <li>Remember: Your love — not the routine — defines success. You’ve got this!</li>
+    </ul>
+  </section>
+
+  <button id="toggleMode" aria-label="Toggle night mode">🌙</button>
+
+  <script>
+    // Schedule with details
+    const schedule = [
+      { t: 360,  label: "Feed — Early morning fuel", details: "Between 6–7 a.m., 4–6 oz breast milk or formula." },
+      { t: 420,  label: "Low‑key awake time", details: "Bouncy seat or crib until 9 a.m. feeding." },
+      { t: 540,  label: "Feed — 9 a.m. snack", details: "Feed regardless of last meal time." },
+      { t: 570,  label: "Playtime", details: "10–30 min of floor or tummy time." },
+      { t: 600,  label: "Nap", details: "Aim for up to 2 hours. White‑noise + swaddle." },
+      { t: 720,  label: "Feed — Lunchtime!", details: "Wake if needed; baby needs fuel." },
+      { t: 750,  label: "Playtime", details: "10–30 min." },
+      { t: 780,  label: "Nap", details: "Around 2 hours." },
+      { t: 900,  label: "Feed — Afternoon fuel", details: "Baby often extra alert + fussy." },
+      { t: 930,  label: "Playtime", details: "10–30 min." },
+      { t: 960,  label: "Nap", details: "May be closer to 1.5 hours." },
+      { t: 1050, label: "Supper Feed — Big dinner!", details: "5:30 p.m. sharp. No more food until 8:30 p.m." },
+      { t: 1080, label: "Wind‑down / fussy time", details: "Keep baby calm; short rotations (bouncy, mat, swing)." },
+      { t: 1110, label: "Short nap / quiet time", details: "45‑90 min." },
+      { t: 1200, label: "Bath time routine 🛁", details: "Warm water + calm voices." },
+      { t: 1230, label: "Bedtime Feed", details: "8:30 p.m. feeding followed by swaddle." },
+      { t: 1260, label: "Bedtime", details: "9 p.m.; dark room, white noise, sweet dreams." },
+      { t: 1560, label: "Night Feed Window", details: "Turn off white noise, un‑swaddle, feed well, change diaper, re‑swaddle. Back to crib, white noise on." }
+    ];
+
+    const encouragements = [
+      "Great job, y'all! 👏",
+      "Easton's crushing it! 🍼",
+      "High‑five for sticking to the plan! ✋",
+      "You're doing amazing — keep it up! 🌟"
+    ];
+
+    const to12hr = mins => {
+      const m = mins % 1440;
+      let h = Math.floor(m / 60);
+      const min = (m % 60).toString().padStart(2, "0");
+      const ampm = h >= 12 ? "p.m." : "a.m.";
+      h = h % 12; if (h === 0) h = 12;
+      return `${h}:${min} ${ampm}`;
+    };
+
+    function populateFullDay() {
+      const full = document.getElementById("fullDay");
+      full.innerHTML = "";
+      schedule.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card day-card";
+        card.innerHTML = `<span class="label">${to12hr(item.t)}</span><br>${item.label}<div class="extra">${item.details}</div>`;
+        card.addEventListener("click", () => {
+          const extra = card.querySelector(".extra");
+          extra.style.display = extra.style.display === "block" ? "none" : "block";
+        });
+        full.appendChild(card);
+      });
+    }
+
+    function updateStatus() {
+      const now = new Date();
+      const minsNow = now.getHours() * 60 + now.getMinutes();
+      const timeline = [...schedule];
+      schedule.filter(s => s.t < 360).forEach(s => timeline.push({ ...s, t: s.t + 1440 }));
+      timeline.sort((a,b)=>a.t-b.t);
+
+      let idx = timeline.findIndex(s => s.t > minsNow);
+      if (idx === -1) idx = timeline.length - 1;
+      const prev = timeline[idx - 1] || timeline[timeline.length - 1];
+      const next = timeline[idx];
+      const rightNow = minsNow - prev.t <= 20 ? prev : { label: "Chill — follow Easton's cues", details: "Watch for sleepy signs (yawns, staring off). Keep environment calm." };
+
+      document.getElementById("currentTime").textContent = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true }).replace("AM","a.m.").replace("PM","p.m.");
+
+      document.getElementById("recentText").textContent = `${to12hr(prev.t)} — ${prev.label}`;
+      document.getElementById("recentExtra").textContent = prev.details || "";
+
+      document.getElementById("nowText").textContent = `${rightNow.label}${rightNow === prev ? " ✨" : ""}`;
+      document.getElementById("nowExtra").textContent = rightNow.details || "";
+
+      document.getElementById("nextText").textContent = `${to12hr(next.t)} — ${next.label}`;
+      document.getElementById("nextExtra").textContent = next.details || "";
+
+      if (Math.random() < 0.05) {
+        document.getElementById("nowText").textContent += "  " + encouragements[Math.floor(Math.random()*encouragements.length)];
+      }
+    }
+
+    document.querySelectorAll(".expandable").forEach(card => {
+      card.addEventListener("click", () => {
+        const extra = card.querySelector(".extra");
+        extra.style.display = extra.style.display === "block" ? "none" : "block";
+      });
+    });
+
+    document.getElementById("toggleMode").addEventListener("click", () => {
+      const body = document.body;
+      body.classList.toggle("dark");
+      document.getElementById("toggleMode").textContent = body.classList.contains("dark") ? "☀️" : "🌙";
+    });
+
+    const fullSection = document.getElementById("fullDay");
+    document.getElementById("toggleFullDay").addEventListener("click", e => {
+      const isOpen = fullSection.style.display === "block";
+      fullSection.style.display = isOpen ? "none" : "block";
+      e.target.textContent = isOpen ? "View Full Day ⤵︎" : "Hide Full Day ⤴︎";
+    });
+
+    const tipsSection = document.getElementById("tipsSection");
+    document.getElementById("toggleTips").addEventListener("click", e => {
+      const open = tipsSection.style.display === "block";
+      tipsSection.style.display = open ? "none" : "block";
+      e.target.textContent = open ? "Crazy Day Tips ⤵︎" : "Hide Crazy Day Tips ⤴︎";
+    });
+
+    populateFullDay();
+    updateStatus();
+    setInterval(updateStatus, 60000);
+  </script>
+</body>
+</html>
